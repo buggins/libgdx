@@ -17,6 +17,7 @@ import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.materials.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.RenderContext;
+import com.badlogic.gdx.graphics.g3d.utils.TextureDescriptor;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
@@ -132,8 +133,18 @@ public class GLES10Shader implements Shader{
 				else if (attribute.type == ColorAttribute.Diffuse)
 					Gdx.gl10.glColor4f(((ColorAttribute)attribute).color.r, ((ColorAttribute)attribute).color.g, ((ColorAttribute)attribute).color.b, ((ColorAttribute)attribute).color.a);
 				else if (attribute.type == TextureAttribute.Diffuse) {
-					if (currentTexture0 != ((TextureAttribute)attribute).textureDescription.texture)
-						(currentTexture0 = ((TextureAttribute)attribute).textureDescription.texture).bind(0);
+					final TextureDescriptor textureDesc = ((TextureAttribute)attribute).textureDescription;
+					if (currentTexture0 != textureDesc.texture) {
+						(currentTexture0 = textureDesc.texture).bind(0);
+						if (textureDesc.uWrap != GL10.GL_INVALID_VALUE)
+							Gdx.gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_S, textureDesc.uWrap);
+						if (textureDesc.uWrap != GL10.GL_INVALID_VALUE)
+							Gdx.gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_WRAP_T, textureDesc.vWrap);
+						if (textureDesc.uWrap != GL10.GL_INVALID_VALUE)
+							Gdx.gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, textureDesc.minFilter);
+						if (textureDesc.uWrap != GL10.GL_INVALID_VALUE)
+							Gdx.gl10.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, textureDesc.magFilter);
+					}
 					Gdx.gl10.glEnable(GL10.GL_TEXTURE_2D);
 				}
 			}
