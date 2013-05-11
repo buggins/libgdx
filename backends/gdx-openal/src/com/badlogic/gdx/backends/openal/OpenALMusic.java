@@ -121,6 +121,10 @@ public abstract class OpenALMusic implements Music {
 		if (audio.noDevice) return;
 		if (sourceID != -1) alSourcef(sourceID, AL_GAIN, volume);
 	}
+	
+	public float getVolume() {
+		return this.volume;
+	}
 
 	/** @return the volume of this music stream. */
 	public float getVolume () {
